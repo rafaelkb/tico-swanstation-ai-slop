@@ -1,0 +1,50 @@
+# Builds tico-swanstation.nro and the module bundle on every push, in the image
+# build_swanstation_nro.sh is written for: danfromtico/switch-dev, devkitA64
+# with libnx and mesa-switch (NVK, OpenGL and EGL for Horizon) in portlibs.
+# The NRO and the bundle are the run's artifacts.
+name: build
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: Keep the log (sdmc:/tico/debug/swanstation.txt)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  nro:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    container:
+      image: ghcr.io/danfromtico/switch-dev:latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Tools
+        run: |
+          command -v zip > /dev/null || { apt-get update && apt-get install -y --no-install-recommends zip; }
+          git config --global --add safe.directory '*'
+          cat /opt/devkitpro/portlibs/switch/share/switch-dev.json
+      - name: Build
+        env:
+          SWAN_DEBUG: ${{ inputs.debug && '1' || '0' }}
+        run: bash build_swanstation_nro.sh
+      - name: Name the artifacts
+        id: name
+        run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tico-swanstation-nro-${{ steps.name.outputs.sha }}
+          path: build_tico/tico-swanstation.nro
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tico-swanstation-module-${{ steps.name.outputs.sha }}
+          path: build_tico/tico-*-module.zip
+          if-no-files-found: error
