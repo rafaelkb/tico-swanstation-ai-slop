@@ -57,6 +57,8 @@ EXCLUDED = {
     "snes9x_superscope_color", "snes9x_justifier1_crosshair", "snes9x_justifier1_color",
     "snes9x_justifier2_crosshair", "snes9x_justifier2_color", "snes9x_rifle_crosshair",
     "snes9x_rifle_color", "snes9x_show_advanced_av_settings",
+    # the TV filter: a shader now (shared/shaders/blargg-ntsc), under Shaders
+    "snes9x_blargg",
 }
 
 # (tab, [(section, [option keys])]). Every core option the dump lists must be
@@ -68,7 +70,7 @@ LAYOUT = [
     ]),
     ("settings_snes9x_tab_video", [
         ("settings_snes9x_section_display", ["snes9x_aspect", "snes9x_overscan"]),
-        ("settings_snes9x_section_filters", ["snes9x_hires_blend", "snes9x_blargg"]),
+        ("settings_snes9x_section_filters", ["snes9x_hires_blend"]),
         ("settings_snes9x_section_mode7", ["snes9x_mode7_hires", "snes9x_mode7_hires_bilinear"]),
         ("settings_snes9x_section_rendering", ["snes9x_gfx_transp"]),
     ]),

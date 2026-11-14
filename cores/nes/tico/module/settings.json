@@ -457,34 +457,6 @@
               ]
             },
             {
-              "key": "fceumm_ntsc_filter",
-              "label": "settings_fceumm_ntsc_filter",
-              "type": "enum",
-              "default": "disabled",
-              "choices": [
-                {
-                  "label": "Disabled",
-                  "value": "disabled"
-                },
-                {
-                  "label": "Composite",
-                  "value": "composite"
-                },
-                {
-                  "label": "S-Video",
-                  "value": "svideo"
-                },
-                {
-                  "label": "RGB",
-                  "value": "rgb"
-                },
-                {
-                  "label": "Monochrome",
-                  "value": "monochrome"
-                }
-              ]
-            },
-            {
               "key": "fceumm_hdpacks",
               "label": "settings_fceumm_hdpacks",
               "type": "bool",

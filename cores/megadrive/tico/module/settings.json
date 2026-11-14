@@ -590,34 +590,6 @@
           "title": "settings_genesis_plus_gx_section_filters",
           "options": [
             {
-              "key": "genesis_plus_gx_blargg_ntsc_filter",
-              "label": "settings_genesis_plus_gx_ntsc_filter",
-              "type": "enum",
-              "default": "disabled",
-              "choices": [
-                {
-                  "label": "Disabled",
-                  "value": "disabled"
-                },
-                {
-                  "label": "Monochrome",
-                  "value": "monochrome"
-                },
-                {
-                  "label": "Composite",
-                  "value": "composite"
-                },
-                {
-                  "label": "S-Video",
-                  "value": "svideo"
-                },
-                {
-                  "label": "RGB",
-                  "value": "rgb"
-                }
-              ]
-            },
-            {
               "key": "genesis_plus_gx_lcd_filter",
               "label": "settings_genesis_plus_gx_lcd_ghosting",
               "type": "bool",

@@ -60,6 +60,8 @@ EXCLUDED = {
     "fceumm_zapper_mode", "fceumm_show_crosshair", "fceumm_zapper_tolerance",
     "fceumm_zapper_trigger", "fceumm_zapper_sensor", "fceumm_arkanoid_mode",
     "fceumm_mouse_sensitivity",
+    # the TV filter: a shader now (shared/shaders/blargg-ntsc), under Shaders
+    "fceumm_ntsc_filter",
 }
 
 # (tab, [(section, [option keys])]). Every core option the dump lists must be
@@ -71,7 +73,7 @@ LAYOUT = [
     ]),
     ("settings_fceumm_tab_video", [
         ("settings_fceumm_section_display", ["fceumm_aspect", "fceumm_palette",
-                                             "fceumm_ntsc_filter", "fceumm_hdpacks"]),
+                                             "fceumm_hdpacks"]),
         ("settings_fceumm_section_overscan", [
             "fceumm_overscan_v_top", "fceumm_overscan_v_bottom",
             "fceumm_overscan_h_left", "fceumm_overscan_h_right",

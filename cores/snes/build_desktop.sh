@@ -2,7 +2,7 @@
 # Desktop (Linux) build of tico-snes9x with the Vulkan renderer, for testing
 # shaders off-device. Needs SDL2, SDL2_mixer, libcurl and a Vulkan driver.
 # Run from the repo root; the binary expects to be started from here too
-# (it reads tico/fonts, tico/shaders and tico/lang relative to the cwd).
+# (it reads tico/fonts, tico/lang and ../../shared/shaders relative to the cwd).
 set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 BUILD="$ROOT/build_desktop"

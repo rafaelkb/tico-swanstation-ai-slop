@@ -73,6 +73,8 @@ LABEL_KEYS = {
 EXCLUDED = {
     "genesis_plus_gx_gun_input", "genesis_plus_gx_gun_cursor", "genesis_plus_gx_invert_mouse",
     "genesis_plus_gx_show_advanced_audio_settings",
+    # the TV filter: a shader now (shared/shaders/blargg-ntsc), under Shaders
+    "genesis_plus_gx_blargg_ntsc_filter",
 }
 
 # (tab, [(section, [option keys])]). Every core option the dump lists must be
@@ -96,7 +98,7 @@ LAYOUT = [
             "genesis_plus_gx_left_border", "genesis_plus_gx_render",
         ]),
         ("settings_genesis_plus_gx_section_filters", [
-            "genesis_plus_gx_blargg_ntsc_filter", "genesis_plus_gx_lcd_filter",
+            "genesis_plus_gx_lcd_filter",
         ]),
         ("settings_genesis_plus_gx_section_enhancements", [
             "genesis_plus_gx_gg_extra", "genesis_plus_gx_no_sprite_limit",

@@ -292,7 +292,10 @@ mkdir -p "$ROMFS_DIR"
 [ -d "$TICO_DIR/fonts" ] && cp -r "$TICO_DIR/fonts" "$ROMFS_DIR/"
 [ -d "$TICO_DIR/lang" ] && cp -r "$TICO_DIR/lang" "$ROMFS_DIR/"
 [ -d "$TICO_DIR/assets" ] && cp -r "$TICO_DIR/assets" "$ROMFS_DIR/"
-[ -d "$TICO_DIR/shaders" ] && cp -r "$TICO_DIR/shaders" "$ROMFS_DIR/"
+# the shaders every module shares (shared/shaders at the top of the repository)
+rm -rf "$ROMFS_DIR/shaders"
+cp -r "$ROOT_DIR/../../shared/shaders" "$ROMFS_DIR/shaders"
+rm -rf "$ROMFS_DIR/shaders/tools"
 # the overlay builds its settings menu from the module's own definition
 mkdir -p "$ROMFS_DIR/module"
 cp "$TICO_DIR/module/settings.json" "$ROMFS_DIR/module/"

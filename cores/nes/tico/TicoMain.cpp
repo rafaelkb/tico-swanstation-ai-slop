@@ -672,15 +672,14 @@ static void OfferResume()
 static const char *kBuiltinShaderDir = "romfs:/shaders/";
 static const char *kUserShaderDir = "sdmc:/tico/shaders/";
 #else
-static const char *kBuiltinShaderDir = "tico/shaders/";
+static const char *kBuiltinShaderDir = "../../shared/shaders/";
 static const char *kUserShaderDir = "shaders/";
 #endif
 
-// The built-ins, with the names the menu shows for them.
+// The built-ins, with the names the menu shows for them: the ones every
+// module shares.
 static const std::pair<const char *, const char *> kBuiltinShaders[] = {
-    {"xbrz.slangp", "xBRZ"},
-    {"eagle.slangp", "Eagle"},
-    {"crt-easymode.slangp", "CRT Easy Mode"},
+#include "../../../shared/shaders/tools/builtin_shaders.inc"
 };
 
 static bool EndsWith(const std::string &s, const char *suffix)
@@ -700,9 +699,33 @@ static void SetShaderPreset(const std::string &path)
     OverlayConfig::SaveConfig();
 }
 
+// The core's own Blargg NTSC filter is a shader now, under Shaders with the
+// other consoles' (shared/shaders/blargg-ntsc), and the core's stays off (see
+// RETRO_ENVIRONMENT_GET_VARIABLE). A setting that had it on picks the shader
+// instead, unless a shader is chosen already.
+static void MigrateTvFilter()
+{
+    static const std::pair<const char *, const char *> kOld[] = {
+        {"composite", "blargg-ntsc/nes-composite.slangp"},
+        {"svideo", "blargg-ntsc/nes-svideo.slangp"},
+        {"rgb", "blargg-ntsc/nes-rgb.slangp"},
+        {"monochrome", "blargg-ntsc/nes-monochrome.slangp"},
+    };
+    const std::string old = OverlayConfig::GetConfigValue("fceumm_ntsc_filter", "disabled");
+    if (old == "disabled")
+        return;
+    if (OverlayConfig::GetConfigValue("shader_preset", "").empty())
+        for (const auto &entry : kOld)
+            if (old == entry.first)
+                OverlayConfig::SetConfigValue("shader_preset", kBuiltinShaderDir + std::string(entry.second));
+    OverlayConfig::SetConfigValue("fceumm_ntsc_filter", "disabled");
+    OverlayConfig::SaveConfig();
+}
+
 // Settings from before slang presets picked one of the old GL shaders.
 static void MigrateShaderSetting()
 {
+    MigrateTvFilter();
     if (OverlayConfig::GetConfigValue("shader_preset", "\x01") != "\x01")
         return; // already chosen, "" included
     static const std::pair<const char *, const char *> kOld[] = {

@@ -1544,6 +1544,14 @@ bool TicoCore::HandleEnvironment(unsigned cmd, void *data)
         if (!var || !var->key)
             return false;
 
+        // The core's own TV filter stays off: it is a shader now, with the
+        // other consoles', under Shaders (shared/shaders/blargg-ntsc).
+        if (std::string(var->key) == "snes9x_blargg")
+        {
+            var->value = "disabled";
+            return true;
+        }
+
         if (!m_configLoaded)
             LoadConfig();
 

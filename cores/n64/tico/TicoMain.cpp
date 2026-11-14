@@ -706,11 +706,10 @@ static void OfferResume()
 static const char *kBuiltinShaderDir = "romfs:/shaders/";
 static const char *kUserShaderDir = "sdmc:/tico/shaders/";
 
-// The built-ins, with the names the menu shows for them.
+// The built-ins, with the names the menu shows for them: the ones every
+// module shares.
 static const std::pair<const char *, const char *> kBuiltinShaders[] = {
-    {"xbrz.slangp", "xBRZ"},
-    {"eagle.slangp", "Eagle"},
-    {"crt-easymode.slangp", "CRT Easy Mode"},
+#include "../../../shared/shaders/tools/builtin_shaders.inc"
 };
 
 static bool EndsWith(const std::string &s, const char *suffix)

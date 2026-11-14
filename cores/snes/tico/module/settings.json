@@ -388,38 +388,6 @@
                   "value": "blur"
                 }
               ]
-            },
-            {
-              "key": "snes9x_blargg",
-              "label": "settings_snes9x_blargg_ntsc_filter",
-              "type": "enum",
-              "default": "disabled",
-              "choices": [
-                {
-                  "label": "Disabled",
-                  "value": "disabled"
-                },
-                {
-                  "label": "Monochrome",
-                  "value": "monochrome"
-                },
-                {
-                  "label": "RF",
-                  "value": "rf"
-                },
-                {
-                  "label": "Composite",
-                  "value": "composite"
-                },
-                {
-                  "label": "S-Video",
-                  "value": "s-video"
-                },
-                {
-                  "label": "RGB",
-                  "value": "rgb"
-                }
-              ]
             }
           ]
         },

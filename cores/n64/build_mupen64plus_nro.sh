@@ -239,7 +239,12 @@ fi
 ROMFS="$BUILD_DIR/romfs"
 mkdir -p "$ROMFS/module"
 cp -R "$TICO_DIR/fonts" "$TICO_DIR/lang" "$TICO_DIR/assets" "$ROMFS/"
-[ $VULKAN -eq 1 ] && cp -R "$TICO_DIR/shaders" "$ROMFS/"
+if [ $VULKAN -eq 1 ]; then
+    # the shaders every module shares (shared/shaders at the top of the repository)
+    rm -rf "$ROMFS/shaders"
+    cp -r "$ROOT_DIR/../../shared/shaders" "$ROMFS/shaders"
+    rm -rf "$ROMFS/shaders/tools"
+fi
 # the overlay builds its settings menu from the module's own definition
 cp "$SETTINGS" "$ROMFS/module/"
 "$DEVKITPRO/tools/bin/elf2nro" "$ELF" "$NRO" --nacp="$NACP" --icon="$ROOT_DIR/tico/icon.jpg" --romfsdir="$ROMFS"
