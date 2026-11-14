@@ -450,7 +450,7 @@
               "default": "Nearest",
               "choices": [
                 {
-                  "label": "Nearest-Neighbor",
+                  "label": "Disabled",
                   "value": "Nearest"
                 },
                 {

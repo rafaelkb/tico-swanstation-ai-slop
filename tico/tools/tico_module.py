@@ -128,6 +128,9 @@ TRIMMED = {
 # Choice labels that say what the choice is here. (option, value) -> label
 RELABELLED = {
     ("swanstation_MemoryCards_Card1Type", "Libretro"): "Game's own card (Default)",
+    # nearest-neighbour is the PlayStation's own sampling: no filter, named
+    # like every other enhancement that is off
+    ("swanstation_GPU_TextureFilter", "Nearest"): "Disabled",
 }
 
 # The renderers, picked before the core starts (TicoCore/SwanRuntime): the
