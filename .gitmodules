@@ -34,3 +34,9 @@
 [submodule "cores/megadrive/tico/deps/SPIRV-Reflect"]
 	path = cores/megadrive/tico/deps/SPIRV-Reflect
 	url = https://github.com/KhronosGroup/SPIRV-Reflect.git
+[submodule "cores/n64/tico/deps/glslang"]
+	path = cores/n64/tico/deps/glslang
+	url = https://github.com/KhronosGroup/glslang.git
+[submodule "cores/n64/tico/deps/SPIRV-Reflect"]
+	path = cores/n64/tico/deps/SPIRV-Reflect
+	url = https://github.com/KhronosGroup/SPIRV-Reflect.git

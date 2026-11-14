@@ -1,0 +1,34 @@
+{
+  "id": "mupen64plus",
+  "name": "Mupen64Plus",
+  "nro": "tico-mupen64plus.nro",
+  "launch": "\"{nro}\" \"{slug}\" \"{rom}\" \"{title}\"",
+  "settings": "config/modules/mupen64plus/settings.json",
+  "config_file": "mupen64plus.jsonc",
+  "system_dir": "mupen64plus",
+  "is_libretro": false,
+  "achievements": true,
+  "systems": [
+    {
+      "slug": "n64",
+      "title": "Nintendo 64",
+      "short_title": "N64",
+      "extensions": [
+        ".z64",
+        ".n64",
+        ".v64",
+        ".zip",
+        ".7z",
+        ".rar"
+      ],
+      "games_file": "n64.dat",
+      "retroachievements_id": 2,
+      "colors": {
+        "start": "4FD97A",
+        "end": "4F8FE6",
+        "start_dark": "39A85A",
+        "end_dark": "3963A8"
+      }
+    }
+  ]
+}
