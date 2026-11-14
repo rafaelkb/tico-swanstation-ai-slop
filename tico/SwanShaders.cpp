@@ -47,6 +47,7 @@ const std::pair<const char *, const char *> kBuiltinShaders[] = {
     {"xbrz.slangp", "xBRZ"},
     {"eagle.slangp", "Eagle"},
     {"crt-easymode.slangp", "CRT Easy Mode"},
+    {"blargg-ntsc-composite.slangp", "Blargg NTSC Composite"},
 };
 
 bool EndsWith(const std::string &s, const char *suffix)
