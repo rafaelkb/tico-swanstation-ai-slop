@@ -25,3 +25,12 @@
 [submodule "cores/nes/tico/deps/SPIRV-Reflect"]
 	path = cores/nes/tico/deps/SPIRV-Reflect
 	url = https://github.com/KhronosGroup/SPIRV-Reflect.git
+[submodule "cores/megadrive/rcheevos"]
+	path = cores/megadrive/rcheevos
+	url = https://github.com/RetroAchievements/rcheevos.git
+[submodule "cores/megadrive/tico/deps/glslang"]
+	path = cores/megadrive/tico/deps/glslang
+	url = https://github.com/KhronosGroup/glslang.git
+[submodule "cores/megadrive/tico/deps/SPIRV-Reflect"]
+	path = cores/megadrive/tico/deps/SPIRV-Reflect
+	url = https://github.com/KhronosGroup/SPIRV-Reflect.git
