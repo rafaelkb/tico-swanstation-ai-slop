@@ -40,3 +40,6 @@
 [submodule "cores/n64/tico/deps/SPIRV-Reflect"]
 	path = cores/n64/tico/deps/SPIRV-Reflect
 	url = https://github.com/KhronosGroup/SPIRV-Reflect.git
+[submodule "cores/saturn/rcheevos"]
+	path = cores/saturn/rcheevos
+	url = https://github.com/RetroAchievements/rcheevos.git
