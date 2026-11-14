@@ -1,14 +1,23 @@
-# Builds tico-swanstation.nro and the module bundle on every push, in the image
-# build_swanstation_nro.sh is written for: danfromtico/switch-dev, devkitA64
-# with libnx and mesa-switch (NVK, OpenGL and EGL for Horizon) in portlibs.
-# The NRO and the bundle are the run's artifacts.
+# Builds every module of this repository on every push: an NRO and a module
+# bundle each, as artifacts of the run. The image is the one the build scripts
+# are written for: danfromtico/switch-dev, devkitA64 with libnx and mesa-switch
+# (NVK, OpenGL and EGL for Horizon) in portlibs.
+#
+#   PlayStation   .                build_swanstation_nro.sh
+#   SNES          cores/snes       build_snes9x_nro.sh
+#   NES           cores/nes        build_fceumm_nro.sh
+#   Mega Drive    cores/megadrive  build_genesis_plus_gx_nro.sh
+#   Nintendo 64   cores/n64        build_mupen64plus_nro.sh
+#   Sega Saturn   cores/saturn     build_yabasanshiro_nro.sh
+#
+# All but Saturn take their shaders from shared/shaders.
 name: build
 on:
   push:
   workflow_dispatch:
     inputs:
       debug:
-        description: Keep the log (sdmc:/tico/debug/swanstation.txt)
+        description: Keep the log (PlayStation only, sdmc:/tico/debug/swanstation.txt)
         type: boolean
         default: false
 permissions:
@@ -18,47 +27,128 @@ concurrency:
   cancel-in-progress: true
 jobs:
   nro:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 180
     container:
       image: ghcr.io/danfromtico/switch-dev:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: swanstation
+            name: PlayStation (SwanStation)
+            dir: .
+            script: build_swanstation_nro.sh
+            nro: build_tico/tico-swanstation.nro
+            romfs: build_tico/romfs
+            submodules: rcheevos tico/deps
+          - id: snes9x
+            name: SNES (Snes9x)
+            dir: cores/snes
+            script: build_snes9x_nro.sh
+            nro: build_tico/tico-snes9x.nro
+            romfs: build_tico/romfs
+            submodules: cores/snes
+          - id: fceumm
+            name: NES (FCEUmm)
+            dir: cores/nes
+            script: build_fceumm_nro.sh
+            nro: build_tico/tico-fceumm.nro
+            romfs: build_tico/romfs
+            submodules: cores/nes
+          - id: genesisplusgx
+            name: Mega Drive (Genesis Plus GX)
+            dir: cores/megadrive
+            script: build_genesis_plus_gx_nro.sh
+            nro: build_tico/tico-genesisplusgx.nro
+            romfs: build_tico/romfs
+            submodules: cores/megadrive
+          - id: mupen64plus
+            name: Nintendo 64 (Mupen64Plus)
+            dir: cores/n64
+            script: build_mupen64plus_nro.sh
+            nro: build_tico/tico-mupen64plus.nro
+            romfs: build_tico/romfs
+            submodules: cores/n64
+          - id: yabasanshiro
+            name: Sega Saturn (YabaSanshiro)
+            dir: cores/saturn
+            script: build_yabasanshiro_nro.sh
+            nro: tico-yabasanshiro.nro
+            romfs: yabause/src/nx/romfs
+            submodules: cores/saturn
     steps:
       - uses: actions/checkout@v7
-        with:
-          submodules: recursive
-      - name: Tools
+      # only the submodules of the module being built
+      - name: Tools and submodules
         run: |
           command -v zip > /dev/null || { apt-get update && apt-get install -y --no-install-recommends zip; }
           git config --global --add safe.directory '*'
+          git submodule update --init --recursive --depth 1 -- ${{ matrix.submodules }}
           cat /opt/devkitpro/portlibs/switch/share/switch-dev.json
+      # YabaSanshiro's script cross-compiles shaderc when it has none
+      - uses: actions/cache@v6
+        if: matrix.id == 'yabasanshiro'
+        with:
+          path: cores/saturn/.cache/shaderc-switch
+          key: shaderc-switch-v2024.3
+      # The log is kept; when the build fails, its errors become annotations
+      # of the run.
       - name: Build
+        working-directory: ${{ matrix.dir }}
+        shell: bash
         env:
           SWAN_DEBUG: ${{ inputs.debug && '1' || '0' }}
-        run: bash build_swanstation_nro.sh
+        run: |
+          set -o pipefail
+          if bash ${{ matrix.script }} 2>&1 | tee "$GITHUB_WORKSPACE/build.log" && [ -f ${{ matrix.nro }} ]; then
+            exit 0
+          fi
+          grep -nE '(^|[^a-zA-Z])(error|Error|ERROR)[: ]|undefined reference|No such file|not found' "$GITHUB_WORKSPACE/build.log" |
+            grep -v 'Werror\|-Wno-error' | head -8 | cut -c1-900 > "$GITHUB_WORKSPACE/errors.txt" || true
+          while IFS= read -r line; do
+            echo "::error title=${{ matrix.id }}::$line"
+          done < "$GITHUB_WORKSPACE/errors.txt"
+          echo "::error title=${{ matrix.id }}: end of the log::$(tail -n 12 "$GITHUB_WORKSPACE/build.log" | cut -c1-300 | sed -z 's/%/%25/g; s/\n/%0A/g')"
+          exit 1
       # What was built, on the run's page: the files, and the shader presets
-      # and settings that went into the NRO's romfs.
+      # that went into the NRO's romfs.
       - name: Summary
         id: name
+        working-directory: ${{ matrix.dir }}
+        shell: bash
         run: |
-          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-          cd build_tico
-          nro=$(stat -c %s tico-swanstation.nro)
-          presets=$(cd romfs/shaders && ls *.slangp | tr '\n' ' ')
+          sha=$(git rev-parse --short HEAD)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          nro=${{ matrix.nro }}
+          bundle=$(ls build_tico/tico-*-module.zip | head -n 1)
+          echo "bundle=${{ matrix.dir }}/$bundle" >> "$GITHUB_OUTPUT"
+          presets=0
+          [ -d ${{ matrix.romfs }}/shaders ] && presets=$(find ${{ matrix.romfs }}/shaders -name '*.slangp' | wc -l)
           {
-            echo "### tico-swanstation $(git rev-parse --short HEAD)"
+            echo "### ${{ matrix.name }} $sha"
             echo '```'
-            sha256sum tico-swanstation.nro tico-*-module.zip
-            echo "romfs: $(find romfs -type f | wc -l) files, shaders: $presets"
+            sha256sum "$nro" "$bundle"
+            echo "romfs: $(find ${{ matrix.romfs }} -type f | wc -l) files, $presets shader presets"
+            [ "$presets" -gt 0 ] && (cd ${{ matrix.romfs }}/shaders && find . -name '*.slangp' | sort | sed 's|^\./||' | tr '\n' ' ')
+            echo
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-          echo "::notice title=tico-swanstation.nro::$nro bytes, shader presets: $presets"
+          echo "::notice title=$(basename "$nro")::$(stat -c %s "$nro") bytes, $presets shader presets in romfs"
       - uses: actions/upload-artifact@v7
         with:
-          name: tico-swanstation-nro-${{ steps.name.outputs.sha }}
-          path: build_tico/tico-swanstation.nro
+          name: tico-${{ matrix.id }}-nro-${{ steps.name.outputs.sha }}
+          path: ${{ matrix.dir }}/${{ matrix.nro }}
           if-no-files-found: error
       - uses: actions/upload-artifact@v7
         with:
-          name: tico-swanstation-module-${{ steps.name.outputs.sha }}
-          path: build_tico/tico-*-module.zip
+          name: tico-${{ matrix.id }}-module-${{ steps.name.outputs.sha }}
+          path: ${{ steps.name.outputs.bundle }}
           if-no-files-found: error
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: log-${{ matrix.id }}
+          path: build.log
+          if-no-files-found: ignore
