@@ -7,3 +7,12 @@
 [submodule "tico/deps/SPIRV-Reflect"]
 	path = tico/deps/SPIRV-Reflect
 	url = https://github.com/KhronosGroup/SPIRV-Reflect.git
+[submodule "cores/snes/rcheevos"]
+	path = cores/snes/rcheevos
+	url = https://github.com/RetroAchievements/rcheevos.git
+[submodule "cores/snes/tico/deps/glslang"]
+	path = cores/snes/tico/deps/glslang
+	url = https://github.com/KhronosGroup/glslang.git
+[submodule "cores/snes/tico/deps/SPIRV-Reflect"]
+	path = cores/snes/tico/deps/SPIRV-Reflect
+	url = https://github.com/KhronosGroup/SPIRV-Reflect.git

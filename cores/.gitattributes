@@ -1,0 +1,3 @@
+# The cores are copies of their own repositories: keep their files byte for
+# byte, whatever the line-ending rules of the repository root say.
+* -text
