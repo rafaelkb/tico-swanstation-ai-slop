@@ -207,8 +207,10 @@ LINK_FLAGS="-specs=$LIBNX/switch.specs -march=armv8-a+crc+crypto -mtune=cortex-a
 # portlibs' libraries also bring.
 LINK_FLAGS="$LINK_FLAGS -Wl,--gc-sections -Wl,--allow-multiple-definition -Wl,-Map=$BUILD_DIR/genesis_plus_gx_tico.map"
 
-# tico/deps/usbhsfs first: libusbhsfs (FAT/exFAT) that also reads NTFS through usbntfs
-LINK_LIBS="-L$TICO_DIR/deps/usbhsfs/lib -L$PORTLIBS/lib -L$LIBNX/lib"
+# tico/deps/usbhsfs first: libusbhsfs (FAT/exFAT) that also reads NTFS through usbntfs.
+# The prebuilt libraries are the ones at the top of the repository (this copy
+# has the headers only).
+LINK_LIBS="-L$TICO_DIR/deps/usbhsfs/lib -L$ROOT_DIR/../../tico/deps/usbhsfs/lib -L$PORTLIBS/lib -L$LIBNX/lib"
 LINK_LIBS="$LINK_LIBS -lSDL2_mixer -lmpg123 -lmodplug -lopusfile -lopus -lvorbisidec -logg -lSDL2"
 
 # SDL2's EGL helpers are satisfied by stubs in TicoStubs.cpp: linking the

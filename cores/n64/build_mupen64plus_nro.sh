@@ -184,10 +184,12 @@ LINK_FLAGS="-specs=$LIBNX/switch.specs -march=armv8-a+crc+crypto -mtune=cortex-a
 LINK_FLAGS="$LINK_FLAGS -Wl,--gc-sections -Wl,-Map=$BUILD_DIR/tico-mupen64plus.map"
 [ $VULKAN -eq 1 ] && LINK_FLAGS="$LINK_FLAGS -Wl,-u,vk_icdGetInstanceProcAddr -Wl,-u,vk_icdNegotiateLoaderICDInterfaceVersion"
 
-# tico/deps/usbhsfs first: libusbhsfs (FAT/exFAT) that also reads NTFS through usbntfs.
+# tico/deps/usbhsfs first: libusbhsfs (FAT/exFAT) that also reads NTFS through
+# usbntfs. The prebuilt libraries are the ones at the top of the repository
+# (this copy has the headers only).
 # Mesa's EGL holds the GL drivers (NVC0, and Zink when the SDK has it). Mesa
 # 20.1 keeps everything in libEGL.a; Mesa 26 splits out libGL and its utilities.
-LIBS="-L$TICO_DIR/deps/usbhsfs/lib -L$MESA_SDK/lib -L$PORTLIBS/lib -L$LIBNX/lib"
+LIBS="-L$TICO_DIR/deps/usbhsfs/lib -L$ROOT_DIR/../../tico/deps/usbhsfs/lib -L$MESA_SDK/lib -L$PORTLIBS/lib -L$LIBNX/lib"
 LIBS="$LIBS -lSDL2_mixer -lmpg123 -lmodplug -lopusfile -lopus -lvorbisidec -logg -lSDL2"
 LIBS="$LIBS -lEGL"
 [ -f "$MESA_SDK/lib/libGL.a" ] && LIBS="$LIBS -lGL"
