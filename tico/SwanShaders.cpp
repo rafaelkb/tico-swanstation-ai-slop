@@ -38,16 +38,14 @@ std::string g_activePreset = "\x01"; // forces the first load
 const char *kBuiltinShaderDir = "romfs:/shaders/";
 const char *kUserShaderDir = "sdmc:/tico/shaders/";
 #else
-const char *kBuiltinShaderDir = "tico/shaders/";
+const char *kBuiltinShaderDir = "shared/shaders/";
 const char *kUserShaderDir = "shaders/";
 #endif
 
-// The built-ins, with the names the menu shows for them.
+// The built-ins, with the names the menu shows for them: the ones every
+// module shares.
 const std::pair<const char *, const char *> kBuiltinShaders[] = {
-    {"xbrz.slangp", "xBRZ"},
-    {"eagle.slangp", "Eagle"},
-    {"crt-easymode.slangp", "CRT Easy Mode"},
-    {"blargg-ntsc-composite.slangp", "Blargg NTSC Composite"},
+#include "../shared/shaders/tools/builtin_shaders.inc"
 };
 
 bool EndsWith(const std::string &s, const char *suffix)
@@ -70,6 +68,9 @@ void SetShaderPreset(const std::string &path)
 // Settings from before slang presets picked one of the old GL shaders.
 void MigrateShaderSetting()
 {
+    // the one Blargg preset there was is the SNES composite of the shared ones
+    if (ShaderPreset() == kBuiltinShaderDir + std::string("blargg-ntsc-composite.slangp"))
+        SetShaderPreset(kBuiltinShaderDir + std::string("blargg-ntsc/snes-composite.slangp"));
     if (OverlayConfig::GetConfigValue("shader_preset", "\x01") != "\x01")
         return; // already chosen, "" included
     const std::pair<const char *, const char *> kOld[] = {

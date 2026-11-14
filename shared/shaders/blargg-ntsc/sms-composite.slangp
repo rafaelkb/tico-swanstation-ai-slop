@@ -1,0 +1,19 @@
+# Blargg's NTSC filter: Genesis Plus GX's "Composite" (sms_ntsc 0.2.3, Shay Green,
+# LGPL 2.1 or later). Written by shared/shaders/tools/blargg_ntsc.py.
+
+shaders = 2
+
+# The kernels, as a texture: 14 taps and a zero either side, by
+# 1 burst phase(s) x 3 pixel places x 3 input channels. The filter
+# of this pass is the one the next reads the game with ("Original"): linear,
+# which averages the pixels of a higher internal resolution.
+shader0 = sms-composite-kernel.slang
+filter_linear0 = true
+scale_type0 = absolute
+scale_x0 = 16
+scale_y0 = 9
+
+# The picture: every pixel of the game through its kernel.
+shader1 = sms.slang
+filter_linear1 = true
+scale_type1 = viewport

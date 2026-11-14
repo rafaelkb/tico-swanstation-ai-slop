@@ -1,16 +1,16 @@
 #version 450
 
 /*
-   Blargg's NTSC filter: the kernel table for the Composite preset.
+   Blargg's NTSC filter: the kernels of Snes9x's "Composite".
 
-   Written by tico/tools/blargg_ntsc_kernel.py from snes_ntsc 0.2.2, the
-   filter Snes9x uses. Copyright (C) 2006-2007 Shay Green, GNU Lesser General
-   Public License, version 2.1 or later.
+   snes_ntsc 0.2.2, Copyright (C) 2006-2007 Shay Green, GNU Lesser General Public
+   License, version 2.1 or later. Written by
+   shared/shaders/tools/blargg_ntsc.py; change that, not this.
 
    One row per burst phase (3), place of the pixel against the colour
-   carrier (3) and input channel (red, green, blue): what a pixel with that
-   channel at 1 adds to the 14 output samples it spreads over. A column of
-   zeroes either side lets blargg-ntsc.slang read between samples.
+   carrier (3) and input channel (red, green, blue): what a pixel with
+   that channel at 1 adds to the 14 output samples it spreads over. A column
+   of zeroes either side lets blargg-ntsc.inc read between samples.
 */
 
 layout(push_constant) uniform Push

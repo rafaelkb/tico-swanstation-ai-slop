@@ -1,0 +1,5 @@
+# Scanlines: YabaSanshiro's "Scanline" video filter.
+shaders = 1
+
+shader0 = scanlines.slang
+scale_type0 = viewport
