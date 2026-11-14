@@ -23,7 +23,7 @@ jobs:
     container:
       image: ghcr.io/danfromtico/switch-dev:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Tools
@@ -35,15 +35,29 @@ jobs:
         env:
           SWAN_DEBUG: ${{ inputs.debug && '1' || '0' }}
         run: bash build_swanstation_nro.sh
-      - name: Name the artifacts
+      # What was built, on the run's page: the files, and the shader presets
+      # and settings that went into the NRO's romfs.
+      - name: Summary
         id: name
-        run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+        run: |
+          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          cd build_tico
+          nro=$(stat -c %s tico-swanstation.nro)
+          presets=$(cd romfs/shaders && ls *.slangp | tr '\n' ' ')
+          {
+            echo "### tico-swanstation $(git rev-parse --short HEAD)"
+            echo '```'
+            sha256sum tico-swanstation.nro tico-*-module.zip
+            echo "romfs: $(find romfs -type f | wc -l) files, shaders: $presets"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice title=tico-swanstation.nro::$nro bytes, shader presets: $presets"
+      - uses: actions/upload-artifact@v7
         with:
           name: tico-swanstation-nro-${{ steps.name.outputs.sha }}
           path: build_tico/tico-swanstation.nro
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: tico-swanstation-module-${{ steps.name.outputs.sha }}
           path: build_tico/tico-*-module.zip
